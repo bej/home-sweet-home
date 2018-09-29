@@ -1,8 +1,19 @@
 package de.derjonk.home_sweet_home;
 
+import javax.persistence.*;
+
+@Entity
 public class Transaction {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Integer id;
+
+    @ManyToOne
     private Expense to;
+    @ManyToOne
     private Income from;
+
     private Integer value;
 
 

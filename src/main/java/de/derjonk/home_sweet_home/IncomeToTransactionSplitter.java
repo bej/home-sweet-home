@@ -20,11 +20,15 @@ public class IncomeToTransactionSplitter {
         }
 
         public List<Transaction> toExpenses(Expense... expenses) {
+            return toExpenses(Arrays.asList(expenses));
+        }
+
+        public List<Transaction> toExpenses(List<Expense> expenses) {
             final AtomicInteger funds = new AtomicInteger(this.income.getAmount());
 
             Predicate<Expense> expensesBackedByIncome = expense -> funds.addAndGet(-1 * expense.getAmount()) >= 0;
-            return Arrays
-                    .stream(expenses)
+            return expenses
+                    .stream()
                     .sequential()
                     .filter(expensesBackedByIncome)
                     .map(expense -> Transaction

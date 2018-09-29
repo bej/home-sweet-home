@@ -7,6 +7,8 @@ import org.junit.runners.JUnit4;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 
 import static org.hamcrest.Matchers.is;
@@ -14,28 +16,43 @@ import static org.hamcrest.Matchers.is;
 @RunWith(JUnit4.class)
 public class TransactionTest {
 
+    private static Account testAccount = Account.withName("MyAccount");
+
+    private BiFunction<Integer, String, Expense> expenseGenerator = (amount, title) -> Expense
+            .forAccount(testAccount)
+            .withAmount(amount)
+            .withTitle(title)
+            .end();
+
+    private BiFunction<Integer, String, Income> incomeGenerator = (amount, title) -> Income
+            .forAccount(testAccount)
+            .withAmount(amount)
+            .withTitle(title)
+            .end();
+
     @Test
-    public void createTwoTransactionsForOneIncomeForTwoExpenses() {
-        Account testAccount = Account.withName("MyAccount");
-        Income cashPayment = Income.forAccount(testAccount)
-                .withAmount(150)
-                .withTitle("Cash payment")
-                .end();
-        Expense rent = Expense.forAccount(testAccount)
-                .withAmount(100)
-                .withTitle("rent")
-                .end();
-        Expense heatingAndWater = Expense.forAccount(testAccount)
-                .withAmount(50)
-                .withTitle("heating and water")
-                .end();
-
-
+    public void createTwoTransactionsForOneIncomeForTwoExpensesWithMatchingFunds() {
         List<Transaction> transactions = TransactionMagic
-                .splitIncome(cashPayment)
-                .toExpenses(rent, heatingAndWater);
+                .splitIncome(incomeGenerator.apply(150, "cash payment"))
+                .toExpenses(
+                        expenseGenerator.apply(100, "rent"),
+                        expenseGenerator.apply(50, "heating and water")
+                );
 
         Assert.assertThat(transactions.size(), is(2));
+    }
+
+    @Test
+    public void createOneTransactionForOneIncomeForTwoExpensesWithInsufficientFunds() {
+        List<Transaction> transactions = TransactionMagic
+                .splitIncome(incomeGenerator.apply(100, "cash payment"))
+                .toExpenses(
+                        expenseGenerator.apply(100, "rent"),
+                        expenseGenerator.apply(50, "heating and water")
+                );
+
+        Assert.assertThat(transactions.size(), is(1));
+        Assert.assertThat(transactions.get(0).to.getTitle(), is("rent"));
     }
 
     public static class TransactionMagic {
@@ -52,7 +69,7 @@ public class TransactionTest {
             }
 
             public List<Transaction> toExpenses(Expense... expenses) {
-                return Arrays.asList(expenses)
+                List<Transaction> transactions = Arrays.asList(expenses)
                         .stream()
                         .map(expense -> Transaction
                                 .withValue(expense.getAmount())
@@ -61,6 +78,15 @@ public class TransactionTest {
                                 .end()
                         )
                         .collect(Collectors.toList());
+
+                AtomicInteger funds = new AtomicInteger(this.income.getAmount());
+
+                List<Transaction> backedTransactions = transactions
+                        .stream()
+                        .filter(transaction -> funds.addAndGet(-1 * transaction.getValue()) >= 0)
+                        .collect(Collectors.toList());
+
+                return backedTransactions;
             }
         }
     }

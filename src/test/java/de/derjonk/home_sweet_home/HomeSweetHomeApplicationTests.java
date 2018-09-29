@@ -8,7 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.function.BiFunction;
 
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
@@ -149,5 +152,74 @@ public class HomeSweetHomeApplicationTests {
             Assert.assertThat(allWithRemainingCredit.size(), is(1));
             Assert.assertThat(allWithRemainingCredit.get(0).getTitle(), is(incomeWithCredit.getTitle()));
         }
+    }
+
+    @Test
+    public void roundtripTest() {
+        Account account = accountRepository.save(Account.withName("Mietkonto Meier"));
+
+        BiFunction<Integer, String, Income> incomeGenerator = (amount, title) -> Income.forAccount(account)
+                .withTitle(title)
+                .withAmount(amount)
+                .end();
+
+        BiFunction<Integer, String, Expense> expenseGenerator = (amount, title) -> Expense.forAccount(account)
+                .withTitle(title)
+                .withAmount(amount)
+                .end();
+
+        expenseRepository.saveAll(Arrays.asList(
+                expenseGenerator.apply(250, "Nebenkosten September"),
+                expenseGenerator.apply(750, "Miete September"),
+                expenseGenerator.apply(250, "Nebenkosten Oktober"),
+                expenseGenerator.apply(750, "Miete Oktober"),
+                expenseGenerator.apply(250, "Nebenkosten November"),
+                expenseGenerator.apply(750, "Miete November")
+        ));
+
+
+        onIncomeCreated(incomeRepository.save(incomeGenerator.apply(1000, "September")));
+        {
+            List<Expense> allCompleteExpenses = expenseRepository.findAllCompleteExpenses();
+            Assert.assertThat(allCompleteExpenses.size(), is(2));
+            Assert.assertThat(allCompleteExpenses.get(0).getTitle(), is("Nebenkosten September"));
+            Assert.assertThat(allCompleteExpenses.get(1).getTitle(), is("Miete September"));
+        }
+
+        onIncomeCreated(incomeRepository.save(incomeGenerator.apply(999, "Oktober")));
+        {
+            List<Expense> allCompleteExpenses = expenseRepository.findAllCompleteExpenses();
+            Assert.assertThat(allCompleteExpenses.size(), is(3));
+            Assert.assertThat(allCompleteExpenses.get(2).getTitle(), is("Nebenkosten Oktober"));
+            List<Expense> allIncompleteExpenses = expenseRepository.findAllIncompleteExpenses();
+            Assert.assertThat(allIncompleteExpenses.size(), is(3));
+            Assert.assertThat(allIncompleteExpenses.get(0).getTitle(), is("Miete Oktober"));
+            List<Transaction> transactions = transactionRepository.findAllByTo(allIncompleteExpenses.get(0));
+            Assert.assertThat(transactions.size(), is(1));
+            Assert.assertThat(transactions.get(0).getValue(), is(749));
+        }
+        onIncomeCreated(incomeRepository.save(incomeGenerator.apply(1001, "November")));
+        {
+            List<Expense> allCompleteExpenses = expenseRepository.findAllCompleteExpenses();
+            Assert.assertThat(allCompleteExpenses.size(), is(6));
+            Expense miete_oktober = expenseRepository.findOneByTitle("Miete Oktober");
+            List<Transaction> allByTo = transactionRepository.findAllByTo(miete_oktober);
+            Assert.assertThat(allByTo.size(), is(2));
+            Assert.assertThat(allByTo.get(0).getValue(), is(749));
+            Assert.assertThat(allByTo.get(1).getValue(), is(1));
+        }
+
+
+
+    }
+
+    private void onIncomeCreated(Income income) {
+        List<Expense> allIncompleteExpenses = expenseRepository.findAllIncompleteExpenses();
+        LinkedHashMap<Expense, List<Transaction>> expenses = new LinkedHashMap<>();
+
+        allIncompleteExpenses.forEach(expense -> expenses.put(expense, transactionRepository.findAllByTo(expense)));
+
+        List<Transaction> transactions = IncomeToTransactionSplitter.splitIncome(income).toExpenses(expenses);
+        transactionRepository.saveAll(transactions);
     }
 }

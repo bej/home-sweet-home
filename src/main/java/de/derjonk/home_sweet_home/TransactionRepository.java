@@ -8,4 +8,5 @@ import java.util.List;
 @RepositoryRestResource
 interface TransactionRepository extends PagingAndSortingRepository<Transaction, Integer> {
 
+    List<Transaction> findAllByTo(Expense expense);
 }

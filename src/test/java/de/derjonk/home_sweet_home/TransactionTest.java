@@ -31,17 +31,38 @@ public class TransactionTest {
                 .end();
 
 
-        List<Transaction> transactions = Arrays.asList(rent, heatingAndWater)
-                .stream()
-                .map(expense -> Transaction
-                        .withValue(expense.getAmount())
-                        .from(cashPayment)
-                        .to(expense)
-                        .end()
-                )
-                .collect(Collectors.toList());
+        List<Transaction> transactions = TransactionMagic
+                .splitIncome(cashPayment)
+                .toExpenses(rent, heatingAndWater);
 
         Assert.assertThat(transactions.size(), is(2));
+    }
+
+    public static class TransactionMagic {
+
+        public static TransactionMagicBuilder splitIncome(Income income) {
+            return new TransactionMagicBuilder(income);
+        }
+
+        public static class TransactionMagicBuilder {
+            private final Income income;
+
+            public TransactionMagicBuilder(Income income) {
+                this.income = income;
+            }
+
+            public List<Transaction> toExpenses(Expense... expenses) {
+                return Arrays.asList(expenses)
+                        .stream()
+                        .map(expense -> Transaction
+                                .withValue(expense.getAmount())
+                                .from(income)
+                                .to(expense)
+                                .end()
+                        )
+                        .collect(Collectors.toList());
+            }
+        }
     }
 
     public static class Transaction {

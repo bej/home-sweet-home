@@ -29,7 +29,7 @@ public class TransactionTest {
 
     @Test
     public void createTwoTransactionsForOneIncomeForTwoExpensesWithMatchingFunds() {
-        List<Transaction> transactions = TransactionMagic
+        List<Transaction> transactions = IncomeToTransactionSplitter
                 .splitIncome(incomeGenerator.apply(150, "cash payment"))
                 .toExpenses(
                         expenseGenerator.apply(100, "rent"),
@@ -41,7 +41,7 @@ public class TransactionTest {
 
     @Test
     public void createOneTransactionForOneIncomeForTwoExpensesWithInsufficientFunds() {
-        List<Transaction> transactions = TransactionMagic
+        List<Transaction> transactions = IncomeToTransactionSplitter
                 .splitIncome(incomeGenerator.apply(100, "cash payment"))
                 .toExpenses(
                         expenseGenerator.apply(100, "rent"),
@@ -54,7 +54,7 @@ public class TransactionTest {
 
     @Test
     public void createTransactionsForExpensesThatAreBackedByIncome() {
-        List<Transaction> transactions = TransactionMagic
+        List<Transaction> transactions = IncomeToTransactionSplitter
                 .splitIncome(incomeGenerator.apply(10, "cash"))
                 .toExpenses(
                         expenseGenerator.apply(3, "one"),
@@ -65,5 +65,6 @@ public class TransactionTest {
         Assert.assertThat(transactions.size(), is(3));
         Assert.assertThat(transactions.get(2).getTo().getTitle(), is("three"));
     }
+
 
 }

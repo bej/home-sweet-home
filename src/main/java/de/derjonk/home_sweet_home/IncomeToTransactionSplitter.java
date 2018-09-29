@@ -6,16 +6,16 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-public class TransactionMagic {
+public class IncomeToTransactionSplitter {
 
-    public static TransactionMagicBuilder splitIncome(Income income) {
-        return new TransactionMagicBuilder(income);
+    public static IncomeToTransactionSplitterBuilder splitIncome(Income income) {
+        return new IncomeToTransactionSplitterBuilder(income);
     }
 
-    public static class TransactionMagicBuilder {
+    public static class IncomeToTransactionSplitterBuilder {
         private final Income income;
 
-        public TransactionMagicBuilder(Income income) {
+        public IncomeToTransactionSplitterBuilder(Income income) {
             this.income = income;
         }
 

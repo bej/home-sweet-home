@@ -9,4 +9,6 @@ import java.util.List;
 interface TransactionRepository extends PagingAndSortingRepository<Transaction, Integer> {
 
     List<Transaction> findAllByTo(Expense expense);
+
+    List<Transaction> findAllByFrom(Income income);
 }

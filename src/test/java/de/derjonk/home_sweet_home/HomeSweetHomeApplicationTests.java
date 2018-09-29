@@ -4,6 +4,8 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -28,6 +30,8 @@ public class HomeSweetHomeApplicationTests {
     private AccountRepository accountRepository;
     @Autowired
     private TransactionRepository transactionRepository;
+
+    Logger logger = LoggerFactory.getLogger(HomeSweetHomeApplicationTests.class);
 
     @After
     public void cleanup() {
@@ -210,6 +214,12 @@ public class HomeSweetHomeApplicationTests {
         }
 
 
+        incomeRepository.findAll().forEach(income -> {
+            logger.info("----");
+            transactionRepository.findAllByFrom(income).forEach(transaction -> {
+                logger.info(income.getTitle() + "\t\t" + transaction.getValue() + "\t" + transaction.getTo().getTitle() + "(" + transaction.getTo().getAmount() + ")");
+            });
+        });
 
     }
 

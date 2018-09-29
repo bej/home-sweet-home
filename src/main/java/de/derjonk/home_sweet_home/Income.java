@@ -4,18 +4,19 @@ package de.derjonk.home_sweet_home;
 import javax.persistence.*;
 
 @Entity
-public class Income {
+public class Income extends AccountingEntry {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
-    @ManyToOne
-    private Account account;
+    public static IncomeBuilder forAccount(final Account account) {
+        return (IncomeBuilder) new IncomeBuilder().forAccount(account);
+    }
 
-    public static Income forAccount(final Account account) {
-        Income income = new Income();
-        income.account = account;
+    public static class IncomeBuilder extends AccountingEntryBuilder<Income> {
 
-        return income;
+        protected IncomeBuilder() {
+            super(new Income());
+        }
     }
 }

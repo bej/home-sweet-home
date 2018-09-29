@@ -14,35 +14,43 @@ import static org.hamcrest.Matchers.notNullValue;
 @SpringBootTest
 public class HomeSweetHomeApplicationTests {
 
-	@Autowired private ExpenseRepository expenseRepository;
-	@Autowired private IncomeRepository incomeRepository;
-	@Autowired private AccountRepository accountRepository;
+    @Autowired
+    private ExpenseRepository expenseRepository;
+    @Autowired
+    private IncomeRepository incomeRepository;
+    @Autowired
+    private AccountRepository accountRepository;
 
-	@Test
-	public void contextLoads() {
-	}
+    @Test
+    public void contextLoads() {
+    }
 
-	@Test
-	public void injectsExpenseRepository() {
-		Assert.assertThat(expenseRepository, is(notNullValue()));
-	}
+    @Test
+    public void injectsExpenseRepository() {
+        Assert.assertThat(expenseRepository, is(notNullValue()));
+    }
 
-	@Test
-	public void injectsIncomeRepository() {
-		Assert.assertThat(incomeRepository, is(notNullValue()));
-	}
+    @Test
+    public void injectsIncomeRepository() {
+        Assert.assertThat(incomeRepository, is(notNullValue()));
+    }
 
-	@Test
+    @Test
     public void findAccountByName() {
-	    accountRepository.save(Account.withName("TestAccount"));
-	    Assert.assertThat(accountRepository.findByNameIgnoreCase("testaccount").getName(), is("TestAccount"));
+        accountRepository.save(Account.withName("TestAccount"));
+        Assert.assertThat(accountRepository.findByNameIgnoreCase("testaccount").getName(), is("TestAccount"));
     }
 
     @Test
     public void findExpenseByAccount() {
-	    Account account = accountRepository.save(Account.withName("ExpenseAccount"));
-	    expenseRepository.save(Expense.forAccount(account));
-	    Assert.assertThat(expenseRepository.findByAccountName("ExpenseAccount").size(), is(1));
+        Account account = accountRepository.save(Account.withName("ExpenseAccount"));
+        expenseRepository.save(
+                Expense.forAccount(account)
+                        .withAmount(100)
+                        .withTitle("Nebenkosten")
+                        .end()
+        );
+        Assert.assertThat(expenseRepository.findByAccountName("ExpenseAccount").size(), is(1));
     }
 
 }

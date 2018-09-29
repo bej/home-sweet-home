@@ -4,19 +4,20 @@ package de.derjonk.home_sweet_home;
 import javax.persistence.*;
 
 @Entity
-public class Expense {
+public class Expense extends AccountingEntry {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
-    @ManyToOne
-    private Account account;
+    public static ExpenseBuilder forAccount(final Account account) {
+        return (ExpenseBuilder) new ExpenseBuilder().forAccount(account);
+    }
 
-    public static Expense forAccount(final Account account) {
-        Expense expense = new Expense();
-        expense.account = account;
+    public static class ExpenseBuilder extends AccountingEntryBuilder<Expense> {
 
-        return expense;
+        protected ExpenseBuilder() {
+            super(new Expense());
+        }
     }
 
 }

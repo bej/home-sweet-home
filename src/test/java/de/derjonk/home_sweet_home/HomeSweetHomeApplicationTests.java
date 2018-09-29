@@ -38,5 +38,11 @@ public class HomeSweetHomeApplicationTests {
 	    Assert.assertThat(accountRepository.findByNameIgnoreCase("testaccount").getName(), is("TestAccount"));
     }
 
+    @Test
+    public void findExpenseByAccount() {
+	    Account account = accountRepository.save(Account.withName("ExpenseAccount"));
+	    expenseRepository.save(Expense.forAccount(account));
+	    Assert.assertThat(expenseRepository.findByAccountName("ExpenseAccount").size(), is(1));
+    }
 
 }

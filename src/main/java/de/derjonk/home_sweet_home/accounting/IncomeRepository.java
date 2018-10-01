@@ -13,12 +13,11 @@ public interface IncomeRepository extends PagingAndSortingRepository<Income, Int
 
     @Query("SELECT i FROM Income i WHERE " +
             "i.account = :account " +
-            "AND (" +
+            "AND " +
             // there don't exist any transactions for this income
-            "(SELECT t FROM Transaction t WHERE t.from = i) IS NULL " +
+            "(NOT EXISTS (SELECT t FROM Transaction t WHERE t.from = i) " +
             "OR " +
             // sum of all transactions < income amount
-            "i.amount > (SELECT SUM(t.value) FROM Transaction t WHERE t.from = i)" +
-            ")")
+            "i.amount > (SELECT SUM(t.value) FROM Transaction t WHERE t.from = i))")
     List<Income> findAllWithRemainingCreditByAccount(@Param("account") Account account);
 }

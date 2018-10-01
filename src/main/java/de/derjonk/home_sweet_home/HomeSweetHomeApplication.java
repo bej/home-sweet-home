@@ -7,6 +7,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.spi.DocumentationType;
@@ -35,14 +38,6 @@ public class HomeSweetHomeApplication {
 		SpringApplication.run(HomeSweetHomeApplication.class, args);
 	}
 
-	@Configuration
-	public static class HomeSweetHomeApplicationConfiguration {
-		@Bean
-		public OnIncomeCreatedEventListener onIncomeCreatedEventListener(ExpenseRepository expenseRepository, TransactionRepository transactionRepository) {
-			return new OnIncomeCreatedEventListener(expenseRepository, transactionRepository);
-		}
-	}
-
 	@PostConstruct
 	public void createSomeSampleData() {
 		Account account = accountRepository.save(Account.withName("Meiers Mietkonto"));
@@ -55,6 +50,14 @@ public class HomeSweetHomeApplication {
 	}
 
 	@Configuration
+	public static class HomeSweetHomeApplicationConfiguration {
+		@Bean
+		public OnIncomeCreatedEventListener onIncomeCreatedEventListener(ExpenseRepository expenseRepository, TransactionRepository transactionRepository) {
+			return new OnIncomeCreatedEventListener(expenseRepository, transactionRepository);
+		}
+	}
+
+	@Configuration
 	public static class SwaggerConfig {
 		@Bean
 		public Docket api() {
@@ -63,6 +66,17 @@ public class HomeSweetHomeApplication {
 					.apis(RequestHandlerSelectors.any())
 					.paths(PathSelectors.any())
 					.build();
+		}
+	}
+
+	@EnableWebSecurity
+	public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+		@Override
+		protected void configure(HttpSecurity http) throws Exception {
+			http.authorizeRequests().anyRequest().fullyAuthenticated();
+			http.httpBasic();
+			http.csrf().disable();
 		}
 	}
 }

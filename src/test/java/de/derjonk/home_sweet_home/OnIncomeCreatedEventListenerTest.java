@@ -105,6 +105,29 @@ public class OnIncomeCreatedEventListenerTest {
                 logger.info(income.getTitle() + "\t\t" + transaction.getValue() + "\t" + transaction.getTo().getTitle() + "(" + transaction.getTo().getAmount() + ")");
             });
         });
+    }
 
+    @Test
+    public void test_Scalar_subquery_contains_more_than_one_row_Issue() {
+        Account account = accountRepository.save(Account.withName("Mietkonto Meier"));
+        Expense expense = expenseRepository.save(Expense
+                .forAccount(account)
+                .withTitle("Expense")
+                .withAmount(9)
+                .end()
+        );
+
+        for (int i = 0; i < 5; i++) {
+            Income income = incomeRepository.save(Income
+                    .forAccount(account)
+                    .withTitle("Income" + i)
+                    .withAmount(2)
+                    .end()
+            );
+            onIncomeCreatedEventListener.onIncomeCreated(income);
+        }
+
+        List<Transaction> allByTo = transactionRepository.findAllByTo(expense);
+        Assert.assertThat(allByTo.size(), is(5));
     }
 }

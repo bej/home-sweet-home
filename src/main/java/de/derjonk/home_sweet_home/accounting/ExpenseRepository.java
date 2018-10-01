@@ -16,13 +16,12 @@ public interface ExpenseRepository extends PagingAndSortingRepository<Expense, I
 
     @Query("SELECT e FROM Expense e WHERE " +
             "e.account = :account " +
-            "AND (" +
+            "AND " +
             // there don't exist any transactions for this expense
-            "(SELECT t FROM Transaction t WHERE t.to = e) IS NULL " +
+            "(NOT EXISTS (SELECT t FROM Transaction t WHERE t.to = e) " +
             "OR " +
             // sum of all transactions < expense amount
-            "e.amount > (SELECT SUM(t.value) FROM Transaction t WHERE t.to = e)" +
-            ")")
+            "e.amount > (SELECT SUM(t.value) FROM Transaction t WHERE t.to = e))")
     List<Expense> findAllIncompleteExpensesByAccount(@Param("account") Account account);
 
     @Query("SELECT e FROM Expense e WHERE " +

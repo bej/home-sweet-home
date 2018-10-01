@@ -18,12 +18,19 @@ public class OnIncomeCreatedEventListener {
     }
 
     public void onIncomeCreated(Income income) {
-        List<Expense> allIncompleteExpenses = expenseRepository.findAllIncompleteExpenses();
-        LinkedHashMap<Expense, List<Transaction>> expenses = new LinkedHashMap<>();
+        final LinkedHashMap<Expense, List<Transaction>> expenses = expenseRepository
+                .findAllIncompleteExpenses()
+                .stream()
+                .collect(
+                        LinkedHashMap::new,
+                        (linkedHashMap, expense) -> linkedHashMap.put(expense, transactionRepository.findAllByTo(expense)),
+                        LinkedHashMap::putAll
+                );
 
-        allIncompleteExpenses.forEach(expense -> expenses.put(expense, transactionRepository.findAllByTo(expense)));
+        final List<Transaction> transactions = IncomeToTransactionSplitter
+                .splitIncome(income)
+                .toExpenses(expenses);
 
-        List<Transaction> transactions = IncomeToTransactionSplitter.splitIncome(income).toExpenses(expenses);
         transactionRepository.saveAll(transactions);
     }
 }

@@ -26,6 +26,10 @@ public abstract class AccountingEntry {
         this.account = account;
     }
 
+    public Account getAccount() {
+        return account;
+    }
+
     public String getTitle() {
         return title;
     }

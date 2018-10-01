@@ -78,13 +78,13 @@ public class ExpenseRepositoryTest {
                 .end());
 
         {
-            List<Expense> expenses = expenseRepository.findAllIncompleteExpenses();
+            List<Expense> expenses = expenseRepository.findAllIncompleteExpensesByAccount(account);
             Assert.assertThat(expenses.size(), is(1));
             Assert.assertThat(expenses.get(0).getTitle(), is(incompleteExpense.getTitle()));
         }
 
         {
-            List<Expense> expenses = expenseRepository.findAllCompleteExpenses();
+            List<Expense> expenses = expenseRepository.findAllCompleteExpensesByAccount(account);
             Assert.assertThat(expenses.size(), is(1));
             Assert.assertThat(expenses.get(0).getTitle(), is(completeExpense.getTitle()));
         }

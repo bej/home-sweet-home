@@ -9,13 +9,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.test.context.junit4.SpringRunner;
-import sun.security.krb5.internal.ccache.FileCredentialsCache;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Properties;
 import java.util.function.BiFunction;
 
 import static org.hamcrest.Matchers.is;
@@ -71,7 +68,7 @@ public class OnIncomeCreatedEventListenerTest {
 
         onIncomeCreatedEventListener.onIncomeCreated(incomeRepository.save(incomeGenerator.apply(1000, "September")));
         {
-            List<Expense> allCompleteExpenses = expenseRepository.findAllCompleteExpenses();
+            List<Expense> allCompleteExpenses = expenseRepository.findAllCompleteExpensesByAccount(account);
             Assert.assertThat(allCompleteExpenses.size(), is(2));
             Assert.assertThat(allCompleteExpenses.get(0).getTitle(), is("Nebenkosten September"));
             Assert.assertThat(allCompleteExpenses.get(1).getTitle(), is("Miete September"));
@@ -79,21 +76,22 @@ public class OnIncomeCreatedEventListenerTest {
 
         onIncomeCreatedEventListener.onIncomeCreated(incomeRepository.save(incomeGenerator.apply(999, "Oktober")));
         {
-            List<Expense> allCompleteExpenses = expenseRepository.findAllCompleteExpenses();
+            List<Expense> allCompleteExpenses = expenseRepository.findAllCompleteExpensesByAccount(account);
             Assert.assertThat(allCompleteExpenses.size(), is(3));
             Assert.assertThat(allCompleteExpenses.get(2).getTitle(), is("Nebenkosten Oktober"));
-            List<Expense> allIncompleteExpenses = expenseRepository.findAllIncompleteExpenses();
+            List<Expense> allIncompleteExpenses = expenseRepository.findAllIncompleteExpensesByAccount(account);
             Assert.assertThat(allIncompleteExpenses.size(), is(3));
             Assert.assertThat(allIncompleteExpenses.get(0).getTitle(), is("Miete Oktober"));
             List<Transaction> transactions = transactionRepository.findAllByTo(allIncompleteExpenses.get(0));
             Assert.assertThat(transactions.size(), is(1));
             Assert.assertThat(transactions.get(0).getValue(), is(749));
         }
+
         onIncomeCreatedEventListener.onIncomeCreated(incomeRepository.save(incomeGenerator.apply(1001, "November")));
         {
-            List<Expense> allCompleteExpenses = expenseRepository.findAllCompleteExpenses();
+            List<Expense> allCompleteExpenses = expenseRepository.findAllCompleteExpensesByAccount(account);
             Assert.assertThat(allCompleteExpenses.size(), is(6));
-            Expense miete_oktober = expenseRepository.findOneByTitle("Miete Oktober");
+            Expense miete_oktober = expenseRepository.findOneByAccountAndTitle(account, "Miete Oktober");
             List<Transaction> allByTo = transactionRepository.findAllByTo(miete_oktober);
             Assert.assertThat(allByTo.size(), is(2));
             Assert.assertThat(allByTo.get(0).getValue(), is(749));

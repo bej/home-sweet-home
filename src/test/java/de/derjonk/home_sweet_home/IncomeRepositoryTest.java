@@ -68,7 +68,7 @@ public class IncomeRepositoryTest {
                 .end());
 
         {
-            List<Income> allWithRemainingCredit = incomeRepository.findAllWithRemainingCredit();
+            List<Income> allWithRemainingCredit = incomeRepository.findAllWithRemainingCreditByAccount(account);
             Assert.assertThat(allWithRemainingCredit.size(), is(1));
             Assert.assertThat(allWithRemainingCredit.get(0).getTitle(), is(incomeWithCredit.getTitle()));
         }

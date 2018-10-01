@@ -32,6 +32,9 @@ public class HomeSweetHomeApplicationTests {
     @Autowired
     private TransactionRepository transactionRepository;
 
+    @Autowired
+    private OnIncomeCreatedEventListener onIncomeCreatedEventListener;
+
     Logger logger = LoggerFactory.getLogger(HomeSweetHomeApplicationTests.class);
 
     @After
@@ -183,7 +186,7 @@ public class HomeSweetHomeApplicationTests {
         ));
 
 
-        onIncomeCreated(incomeRepository.save(incomeGenerator.apply(1000, "September")));
+        onIncomeCreatedEventListener.onIncomeCreated(incomeRepository.save(incomeGenerator.apply(1000, "September")));
         {
             List<Expense> allCompleteExpenses = expenseRepository.findAllCompleteExpenses();
             Assert.assertThat(allCompleteExpenses.size(), is(2));
@@ -191,7 +194,7 @@ public class HomeSweetHomeApplicationTests {
             Assert.assertThat(allCompleteExpenses.get(1).getTitle(), is("Miete September"));
         }
 
-        onIncomeCreated(incomeRepository.save(incomeGenerator.apply(999, "Oktober")));
+        onIncomeCreatedEventListener.onIncomeCreated(incomeRepository.save(incomeGenerator.apply(999, "Oktober")));
         {
             List<Expense> allCompleteExpenses = expenseRepository.findAllCompleteExpenses();
             Assert.assertThat(allCompleteExpenses.size(), is(3));
@@ -203,7 +206,7 @@ public class HomeSweetHomeApplicationTests {
             Assert.assertThat(transactions.size(), is(1));
             Assert.assertThat(transactions.get(0).getValue(), is(749));
         }
-        onIncomeCreated(incomeRepository.save(incomeGenerator.apply(1001, "November")));
+        onIncomeCreatedEventListener.onIncomeCreated(incomeRepository.save(incomeGenerator.apply(1001, "November")));
         {
             List<Expense> allCompleteExpenses = expenseRepository.findAllCompleteExpenses();
             Assert.assertThat(allCompleteExpenses.size(), is(6));
@@ -224,13 +227,4 @@ public class HomeSweetHomeApplicationTests {
 
     }
 
-    private void onIncomeCreated(Income income) {
-        List<Expense> allIncompleteExpenses = expenseRepository.findAllIncompleteExpenses();
-        LinkedHashMap<Expense, List<Transaction>> expenses = new LinkedHashMap<>();
-
-        allIncompleteExpenses.forEach(expense -> expenses.put(expense, transactionRepository.findAllByTo(expense)));
-
-        List<Transaction> transactions = IncomeToTransactionSplitter.splitIncome(income).toExpenses(expenses);
-        transactionRepository.saveAll(transactions);
-    }
 }

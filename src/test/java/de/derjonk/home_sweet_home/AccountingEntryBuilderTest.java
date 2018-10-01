@@ -1,5 +1,8 @@
 package de.derjonk.home_sweet_home;
 
+import de.derjonk.home_sweet_home.accounting.Account;
+import de.derjonk.home_sweet_home.accounting.Expense;
+import de.derjonk.home_sweet_home.accounting.Income;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;

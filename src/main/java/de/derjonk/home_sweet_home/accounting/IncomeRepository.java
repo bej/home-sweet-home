@@ -1,4 +1,4 @@
-package de.derjonk.home_sweet_home;
+package de.derjonk.home_sweet_home.accounting;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
@@ -7,7 +7,7 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import java.util.List;
 
 @RepositoryRestResource
-interface IncomeRepository extends PagingAndSortingRepository<Income, Integer> {
+public interface IncomeRepository extends PagingAndSortingRepository<Income, Integer> {
     List<Income> findByAccountName(String accountName);
 
     @Query("SELECT i FROM Income i WHERE " +

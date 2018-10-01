@@ -1,4 +1,4 @@
-package de.derjonk.home_sweet_home;
+package de.derjonk.home_sweet_home.accounting;
 
 public abstract class AccountingEntryBuilder<T extends AccountingEntry> {
     private final T entry;

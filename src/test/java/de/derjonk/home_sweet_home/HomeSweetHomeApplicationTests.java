@@ -1,5 +1,6 @@
 package de.derjonk.home_sweet_home;
 
+import de.derjonk.home_sweet_home.accounting.*;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;

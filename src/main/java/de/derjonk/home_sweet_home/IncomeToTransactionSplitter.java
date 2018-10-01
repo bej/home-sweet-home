@@ -1,5 +1,9 @@
 package de.derjonk.home_sweet_home;
 
+import de.derjonk.home_sweet_home.accounting.Expense;
+import de.derjonk.home_sweet_home.accounting.Income;
+import de.derjonk.home_sweet_home.accounting.Transaction;
+
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;

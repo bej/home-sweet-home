@@ -10,7 +10,7 @@ export function apiConfigFactory() {
   const params: ConfigurationParameters = {
     // set configuration parameters here.
     username: 'user',
-    password: '092e5ea1-e536-4f8a-9178-a38397be4ecc',
+    password: 'a55f84c6-64fb-411e-a466-72ae71cf068f',
     basePath: 'http://localhost:8080'
   }
   return new Configuration(params);

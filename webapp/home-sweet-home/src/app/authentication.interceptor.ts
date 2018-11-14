@@ -1,8 +1,17 @@
 import {Injectable} from '@angular/core';
 import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
 import {Observable} from 'rxjs';
-import {apiConfigFactory} from './app.module';
-import {Configuration} from '../generated';
+import {Configuration, ConfigurationParameters} from '../generated';
+
+export function apiConfigFactory() {
+  const params: ConfigurationParameters = {
+    // set configuration parameters here.
+    username: 'user',
+    password: '777a1ec0-2c9c-4a8a-b2e7-095388669578',
+    basePath: 'http://localhost:8080'
+  }
+  return new Configuration(params);
+}
 
 @Injectable()
 export class AuthenticationInterceptor implements HttpInterceptor {

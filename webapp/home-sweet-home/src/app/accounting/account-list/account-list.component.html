@@ -1,17 +1,13 @@
-<div *ngIf="(accounts && accounts.length)">
+<h2>
+  Accounts
+</h2>
+<ul class="list-group">
+  <li class="list-group-item" *ngFor="let account of resourcesAccount.embedded.accounts">{{ account.name }}</li>
+</ul>
 
-  <h2>
-    Accounts
-  </h2>
-  <ul class="list-group">
-    <li class="list-group-item" *ngFor="let account of accounts">{{ account.name }}</li>
-  </ul>
-
-  <h2>
-    Transactions
-  </h2>
-  <ul class="list-group" *ngIf="(transactions && transactions.length)">
-    <li class="list-group-item" *ngFor="let transaction of transactions">{{ transaction.value }}</li>
-  </ul>
-
-</div>
+<h2>
+  Transactions
+</h2>
+<ul class="list-group" *ngIf="(transactions && transactions.length)">
+  <li class="list-group-item" *ngFor="let transaction of transactions">{{ transaction.value }}</li>
+</ul>

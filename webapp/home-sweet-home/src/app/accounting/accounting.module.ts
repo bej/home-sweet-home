@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AccountListComponent } from './account-list/account-list.component';
+import {AccountsResolverService} from './accounts-resolver.service';
 
 @NgModule({
   imports: [
@@ -9,6 +10,7 @@ import { AccountListComponent } from './account-list/account-list.component';
   exports: [
     AccountListComponent
   ],
-  declarations: [AccountListComponent]
+  declarations: [AccountListComponent],
+  providers: [AccountsResolverService]
 })
 export class AccountingModule { }

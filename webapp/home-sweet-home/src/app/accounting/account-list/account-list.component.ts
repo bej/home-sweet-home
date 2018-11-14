@@ -7,6 +7,7 @@ import {
   Transaction,
   TransactionEntityService
 } from '../../../generated';
+import {ActivatedRoute} from '@angular/router';
 
 @Component({
   selector: 'app-account-list',
@@ -15,20 +16,17 @@ import {
 })
 export class AccountListComponent implements OnInit {
   title = 'home-sweet-home';
+  protected resourcesAccount: ResourcesAccount;
 
   protected accounts: Array<Account>;
   protected transactions: Array<Transaction>;
 
-  constructor(private accountEntityService: AccountEntityService, private transactionEntityService: TransactionEntityService) {
+  constructor(private route: ActivatedRoute, private transactionEntityService: TransactionEntityService) {
 
   }
 
   ngOnInit() {
-    this.accountEntityService.findAllAccountUsingGET().subscribe((response: ResourcesAccount) => {
-      response.embedded = response['_embedded'];
-      response.links = response['_links'];
-      this.accounts = response.embedded.accounts;
-    });
+    this.resourcesAccount = this.route.snapshot.data.resourcesAccount;
 
     this.transactionEntityService.findAllTransactionUsingGET().subscribe((response: ResourcesTransaction) => {
       response.embedded = response['_embedded'];

@@ -5,18 +5,20 @@ import {ApiModule, Configuration, ConfigurationParameters} from '../generated';
 import { AppComponent } from './app.component';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {apiConfigFactory, AuthenticationInterceptor} from './authentication.interceptor';
-import { AccountListComponent } from './account-list/account-list.component';
+import {AccountingModule} from './accounting/accounting.module';
+import { AppRoutingModule } from './app-routing.module';
 
 
 @NgModule({
   declarations: [
-    AppComponent,
-    AccountListComponent
+    AppComponent
   ],
   imports: [
     BrowserModule,
     ApiModule.forRoot(apiConfigFactory),
-    HttpClientModule
+    HttpClientModule,
+    AccountingModule,
+    AppRoutingModule
   ],
   providers: [
     {

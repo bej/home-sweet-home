@@ -1,7 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
-import {ApiModule, Configuration, ConfigurationParameters} from '../generated';
+import {ApiModule } from '../generated';
 import { AppComponent } from './app.component';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {apiConfigFactory, AuthenticationInterceptor} from './authentication.interceptor';

@@ -1,11 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {
-  Account,
-  AccountEntityService,
-  ResourcesAccount,
-  ResourcesTransaction,
-  Transaction,
-  TransactionEntityService
+  ResourcesAccount
 } from '../../../generated';
 import {ActivatedRoute} from '@angular/router';
 
@@ -15,23 +10,20 @@ import {ActivatedRoute} from '@angular/router';
   styleUrls: ['./account-list.component.css']
 })
 export class AccountListComponent implements OnInit {
-  title = 'home-sweet-home';
   protected resourcesAccount: ResourcesAccount;
 
-  protected accounts: Array<Account>;
-  protected transactions: Array<Transaction>;
-
-  constructor(private route: ActivatedRoute, private transactionEntityService: TransactionEntityService) {
+  constructor(private route: ActivatedRoute) {
 
   }
 
   ngOnInit() {
     this.resourcesAccount = this.route.snapshot.data.resourcesAccount;
+  }
 
-    this.transactionEntityService.findAllTransactionUsingGET().subscribe((response: ResourcesTransaction) => {
-      response.embedded = response['_embedded'];
-      response.links = response['_links'];
-      this.transactions = response.embedded.transactions;
-    });
+  getIdForAccount(account: Account) {
+    const selfLink = account['_links'].self;
+    const fragments = selfLink.href.split('/');
+
+    return fragments[fragments.length - 1];
   }
 }

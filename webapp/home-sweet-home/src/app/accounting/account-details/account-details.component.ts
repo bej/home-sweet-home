@@ -20,11 +20,11 @@ import 'rxjs-compat/add/operator/delay';
 export class AccountDetailsComponent implements OnInit {
   protected account: ResourceAccount;
   protected transactions: Array<Transaction>;
-  payment: any = {
-    amount: 0
+  payment: Income = {
+    amount: 0,
+    title: 'New Payment'
   };
-
-
+  
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -34,6 +34,7 @@ export class AccountDetailsComponent implements OnInit {
   ngOnInit() {
     this.route.data.subscribe(data => {
       this.account = data.resourceAccount;
+      this.payment.account = this.account['_links'].self.href;
 
       this.transactionEntityService.findAllTransactionUsingGET().subscribe((response: ResourcesTransaction) => {
         response.embedded = response['_embedded'];
@@ -45,12 +46,7 @@ export class AccountDetailsComponent implements OnInit {
   }
 
   onPaymentSubmit() {
-    const income: Income = {
-      account: this.account['_links'].self.href,
-      amount: this.payment.amount,
-      title: 'Random Payment'
-    };
-    this.incomeEntityServie.saveIncomeUsingPOST(income).subscribe(response => {
+    this.incomeEntityServie.saveIncomeUsingPOST(this.payment).subscribe(response => {
         this.router.navigate([this.router.url]);
     });
   }

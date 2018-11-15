@@ -16,6 +16,7 @@ import { Link } from './link';
 export interface ResourceExpense {
     account?: Account;
     amount?: number;
+    complete?: boolean;
     links?: Array<Link>;
     title?: string;
 }

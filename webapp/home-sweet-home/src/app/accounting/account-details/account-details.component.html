@@ -28,7 +28,9 @@
   </h2>
   <ul class="list-group" *ngIf="(transactions && transactions.length)">
     <li class="list-group-item" *ngFor="let transaction of transactions">
-      {{ transaction.value }}: {{transaction.from.title}} &rarr; {{transaction.to.title}} ({{transaction.to.amount}})
+      <span>{{ transaction.value }}: {{transaction.from.title}} &rarr; {{transaction.to.title}} ({{transaction.to.amount}})</span>
+      <span *ngIf="transaction.to.complete" class="badge badge-success">complete</span>
+      <span *ngIf="!transaction.to.complete" class="badge badge-danger">incomplete ({{transaction.to.balance}})</span>
     </li>
   </ul>
 </div>

@@ -3,6 +3,7 @@ package de.derjonk.home_sweet_home.accounting;
 import javax.persistence.*;
 
 @Entity
+@Table(name = "t_transaction")
 public class Transaction {
 
     @Id
@@ -10,10 +11,12 @@ public class Transaction {
     private Integer id;
 
     @ManyToOne
+    @JoinColumn(name = "expense_to_FK")
     private Expense to;
     @ManyToOne
     private Income from;
 
+    @Column(name = "t_value")
     private Integer value;
 
 

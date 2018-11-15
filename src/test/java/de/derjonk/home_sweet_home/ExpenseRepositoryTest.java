@@ -89,4 +89,53 @@ public class ExpenseRepositoryTest {
             Assert.assertThat(expenses.get(0).getTitle(), is(completeExpense.getTitle()));
         }
     }
+
+    @Test
+    public void testHibernateFormulaForCompleteExpense() {
+        Account account = accountRepository.save(Account.withName("Account"));
+        Expense expense = expenseRepository.save(
+                Expense.forAccount(account)
+                        .withAmount(100)
+                        .withTitle("some payment")
+                        .end()
+        );
+        {
+            Income income = incomeRepository.save(
+                    Income.forAccount(account)
+                            .withAmount(50)
+                            .withTitle("Income")
+                            .end()
+            );
+            transactionRepository.save(Transaction
+                    .withValue(50)
+                    .from(income)
+                    .to(expense)
+                    .end());
+        }
+
+        {
+            Expense toCheck = expenseRepository.findOneByAccountAndTitle(account, expense.getTitle());
+            Assert.assertThat(toCheck.isComplete(), is(false));
+        }
+
+        {
+            Income income = incomeRepository.save(
+                    Income.forAccount(account)
+                            .withAmount(50)
+                            .withTitle("Income")
+                            .end()
+            );
+            transactionRepository.save(Transaction
+                    .withValue(50)
+                    .from(income)
+                    .to(expense)
+                    .end());
+        }
+
+        {
+            Expense toCheck = expenseRepository.findOneByAccountAndTitle(account, expense.getTitle());
+            Assert.assertThat(toCheck.isComplete(), is(true));
+        }
+
+    }
 }

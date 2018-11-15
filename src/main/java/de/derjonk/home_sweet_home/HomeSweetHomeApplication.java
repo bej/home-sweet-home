@@ -43,13 +43,25 @@ public class HomeSweetHomeApplication {
 
 	@PostConstruct
 	public void createSomeSampleData() {
-		Account account = accountRepository.save(Account.withName("Meiers Mietkonto"));
-		expenseRepository.saveAll(Arrays.asList(
-				Expense.forAccount(account).withAmount(750).withTitle("Miete Oktober").end(),
-				Expense.forAccount(account).withAmount(250).withTitle("Nebenkosten Oktober").end(),
-				Expense.forAccount(account).withAmount(750).withTitle("Miete November").end(),
-				Expense.forAccount(account).withAmount(250).withTitle("Nebenkosten November").end()
-		));
+		{
+			Account account = accountRepository.save(Account.withName("Meiers Mietkonto"));
+			expenseRepository.saveAll(Arrays.asList(
+					Expense.forAccount(account).withAmount(750).withTitle("Miete Oktober").end(),
+					Expense.forAccount(account).withAmount(250).withTitle("Nebenkosten Oktober").end(),
+					Expense.forAccount(account).withAmount(750).withTitle("Miete November").end(),
+					Expense.forAccount(account).withAmount(250).withTitle("Nebenkosten November").end()
+			));
+		}
+
+		{
+			Account account = accountRepository.save(Account.withName("Müllers Mietkonto"));
+			expenseRepository.saveAll(Arrays.asList(
+					Expense.forAccount(account).withAmount(500).withTitle("Miete Oktober").end(),
+					Expense.forAccount(account).withAmount(150).withTitle("Nebenkosten Oktober").end(),
+					Expense.forAccount(account).withAmount(500).withTitle("Miete November").end(),
+					Expense.forAccount(account).withAmount(150).withTitle("Nebenkosten November").end()
+			));
+		}
 	}
 
 	@Configuration

@@ -1,5 +1,6 @@
 package de.derjonk.home_sweet_home.accounting;
 
+import javax.persistence.Column;
 import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
 
@@ -7,6 +8,7 @@ import javax.persistence.MappedSuperclass;
 public abstract class AccountingEntry {
     @ManyToOne
     private Account account;
+    @Column(name = "ae_amount")
     private Integer amount;
     private String title;
 

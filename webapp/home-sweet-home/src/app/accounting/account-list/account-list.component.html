@@ -1,8 +1,10 @@
-<h2>
-  Accounts
-</h2>
-<div class="list-group">
-  <a [routerLink]="['/accounts/' + getIdForAccount(account)]" class="list-group-item" *ngFor="let account of resourcesAccount.embedded.accounts">
-    {{ account.name }}
-  </a>
+<div style="text-align: center">
+  <h2>
+    Accounts
+  </h2>
+  <div class="list-group">
+    <a [routerLink]="['/accounts/' + getIdForAccount(account)]" class="list-group-item" *ngFor="let account of resourcesAccount.embedded.accounts">
+      {{ account.name }}
+    </a>
+  </div>
 </div>

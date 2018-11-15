@@ -2,23 +2,34 @@
   <a routerLink="/accounts">All Accounts</a>
 </nav>
 
-<p>
-  {{account.name}}
-</p>
+<div style="text-align: center">
+  <h1>
+    {{account.name}}
+  </h1>
 
-<form (ngSubmit)="onPaymentSubmit()" #paymentForm="ngForm">
-  <div class="form-group">
-    <label for="payment">Payment</label>
-    <input type="text" class="form-control" id="payment" required [(ngModel)]="payment.amount" name="amount">
-  </div>
+  <h2>Payments</h2>
+  <form (ngSubmit)="onPaymentSubmit()" #paymentForm="ngForm">
+    <div class="form-row">
+      <div class="col-8">
+        <input type="text" class="form-control mb-6 mr-sm-6" id="paymentTitle" required [(ngModel)]="payment.title" name="title">
+      </div>
 
-  <button type="submit" class="btn btn-success">Submit</button>
-</form>
+      <div class="col">
+        <input type="number" class="form-control form-control mb-2 mr-sm-2" id="paymentAmount" required [(ngModel)]="payment.amount" name="amount">
+      </div>
+      <div class="col">
+        <button type="submit" class="btn btn-primary mb-2">Pay it</button>
+      </div>
+    </div>
+  </form>
 
-<h2>
-  Transactions
-</h2>
-<ul class="list-group" *ngIf="(transactions && transactions.length)">
-  <li class="list-group-item" *ngFor="let transaction of transactions">{{ transaction.value }}</li>
-</ul>
+  <h2>
+    Transactions
+  </h2>
+  <ul class="list-group" *ngIf="(transactions && transactions.length)">
+    <li class="list-group-item" *ngFor="let transaction of transactions">
+      {{ transaction.value }}: {{transaction.from.title}} &rarr; {{transaction.to.title}} ({{transaction.to.amount}})
+    </li>
+  </ul>
+</div>
 

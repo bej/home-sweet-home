@@ -24,7 +24,7 @@ export class AccountDetailsComponent implements OnInit {
     amount: 0,
     title: 'New Payment'
   };
-  
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -33,21 +33,28 @@ export class AccountDetailsComponent implements OnInit {
 
   ngOnInit() {
     this.route.data.subscribe(data => {
+      const accountUrl: string = data.resourceAccount['_links'].self.href;
       this.account = data.resourceAccount;
-      this.payment.account = this.account['_links'].self.href;
+      // @ts-ignore
+      // special handling: Data-Rest uses the resoure URL as identifier
+      // but not the full model as generated from swagger file
+      this.payment.account = accountUrl;
 
-      this.transactionEntityService.findAllTransactionUsingGET().subscribe((response: ResourcesTransaction) => {
-        response.embedded = response['_embedded'];
-        response.links = response['_links'];
-        this.transactions = response.embedded.transactions;
-      });
+      this.transactionEntityService.findAllByFromAccountTransactionUsingGET(accountUrl)
+        .subscribe((response: ResourcesTransaction) => {
+          response.embedded = response['_embedded'];
+          response.links = response['_links'];
+          this.transactions = response.embedded.transactions;
+        });
     });
 
   }
 
   onPaymentSubmit() {
-    this.incomeEntityServie.saveIncomeUsingPOST(this.payment).subscribe(response => {
+    this.incomeEntityServie
+      .saveIncomeUsingPOST(this.payment)
+      .subscribe(response => {
         this.router.navigate([this.router.url]);
-    });
+      });
   }
 }

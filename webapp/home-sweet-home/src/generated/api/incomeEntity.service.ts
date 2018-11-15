@@ -199,18 +199,18 @@ export class IncomeEntityService {
     /**
      * findByAccountNameIncome
      * 
-     * @param param0 param0
+     * @param accountName accountName
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public findByAccountNameIncomeUsingGET(param0?: string, observe?: 'body', reportProgress?: boolean): Observable<ResourcesIncome>;
-    public findByAccountNameIncomeUsingGET(param0?: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<ResourcesIncome>>;
-    public findByAccountNameIncomeUsingGET(param0?: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<ResourcesIncome>>;
-    public findByAccountNameIncomeUsingGET(param0?: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public findByAccountNameIncomeUsingGET(accountName?: string, observe?: 'body', reportProgress?: boolean): Observable<ResourcesIncome>;
+    public findByAccountNameIncomeUsingGET(accountName?: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<ResourcesIncome>>;
+    public findByAccountNameIncomeUsingGET(accountName?: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<ResourcesIncome>>;
+    public findByAccountNameIncomeUsingGET(accountName?: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
 
         let queryParameters = new HttpParams({encoder: new CustomHttpUrlEncodingCodec()});
-        if (param0 !== undefined) {
-            queryParameters = queryParameters.set('param0', <any>param0);
+        if (accountName !== undefined) {
+            queryParameters = queryParameters.set('accountName', <any>accountName);
         }
 
         let headers = this.defaultHeaders;

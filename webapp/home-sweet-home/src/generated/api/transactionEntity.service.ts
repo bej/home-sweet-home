@@ -101,28 +101,20 @@ export class TransactionEntityService {
     }
 
     /**
-     * findAllByFromTransaction
+     * findAllByFromAccountTransaction
      * 
-     * @param accountName 
-     * @param amount 
-     * @param title 
+     * @param account account
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public findAllByFromTransactionUsingGET(accountName?: string, amount?: number, title?: string, observe?: 'body', reportProgress?: boolean): Observable<ResourcesTransaction>;
-    public findAllByFromTransactionUsingGET(accountName?: string, amount?: number, title?: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<ResourcesTransaction>>;
-    public findAllByFromTransactionUsingGET(accountName?: string, amount?: number, title?: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<ResourcesTransaction>>;
-    public findAllByFromTransactionUsingGET(accountName?: string, amount?: number, title?: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public findAllByFromAccountTransactionUsingGET(account?: string, observe?: 'body', reportProgress?: boolean): Observable<ResourcesTransaction>;
+    public findAllByFromAccountTransactionUsingGET(account?: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<ResourcesTransaction>>;
+    public findAllByFromAccountTransactionUsingGET(account?: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<ResourcesTransaction>>;
+    public findAllByFromAccountTransactionUsingGET(account?: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
 
         let queryParameters = new HttpParams({encoder: new CustomHttpUrlEncodingCodec()});
-        if (accountName !== undefined) {
-            queryParameters = queryParameters.set('account.name', <any>accountName);
-        }
-        if (amount !== undefined) {
-            queryParameters = queryParameters.set('amount', <any>amount);
-        }
-        if (title !== undefined) {
-            queryParameters = queryParameters.set('title', <any>title);
+        if (account !== undefined) {
+            queryParameters = queryParameters.set('account', <any>account);
         }
 
         let headers = this.defaultHeaders;
@@ -140,58 +132,7 @@ export class TransactionEntityService {
         let consumes: string[] = [
         ];
 
-        return this.httpClient.get<ResourcesTransaction>(`${this.basePath}/transactions/search/findAllByFrom`,
-            {
-                params: queryParameters,
-                withCredentials: this.configuration.withCredentials,
-                headers: headers,
-                observe: observe,
-                reportProgress: reportProgress
-            }
-        );
-    }
-
-    /**
-     * findAllByToTransaction
-     * 
-     * @param accountName 
-     * @param amount 
-     * @param title 
-     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-     * @param reportProgress flag to report request and response progress.
-     */
-    public findAllByToTransactionUsingGET(accountName?: string, amount?: number, title?: string, observe?: 'body', reportProgress?: boolean): Observable<ResourcesTransaction>;
-    public findAllByToTransactionUsingGET(accountName?: string, amount?: number, title?: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<ResourcesTransaction>>;
-    public findAllByToTransactionUsingGET(accountName?: string, amount?: number, title?: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<ResourcesTransaction>>;
-    public findAllByToTransactionUsingGET(accountName?: string, amount?: number, title?: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
-
-        let queryParameters = new HttpParams({encoder: new CustomHttpUrlEncodingCodec()});
-        if (accountName !== undefined) {
-            queryParameters = queryParameters.set('account.name', <any>accountName);
-        }
-        if (amount !== undefined) {
-            queryParameters = queryParameters.set('amount', <any>amount);
-        }
-        if (title !== undefined) {
-            queryParameters = queryParameters.set('title', <any>title);
-        }
-
-        let headers = this.defaultHeaders;
-
-        // to determine the Accept header
-        let httpHeaderAccepts: string[] = [
-            '*/*'
-        ];
-        let httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        if (httpHeaderAcceptSelected != undefined) {
-            headers = headers.set("Accept", httpHeaderAcceptSelected);
-        }
-
-        // to determine the Content-Type header
-        let consumes: string[] = [
-        ];
-
-        return this.httpClient.get<ResourcesTransaction>(`${this.basePath}/transactions/search/findAllByTo`,
+        return this.httpClient.get<ResourcesTransaction>(`${this.basePath}/transactions/search/findAllByFromAccount`,
             {
                 params: queryParameters,
                 withCredentials: this.configuration.withCredentials,

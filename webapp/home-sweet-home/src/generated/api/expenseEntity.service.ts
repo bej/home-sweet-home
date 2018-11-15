@@ -477,18 +477,18 @@ export class ExpenseEntityService {
     /**
      * findByAccountNameExpense
      * 
-     * @param param0 param0
+     * @param accountName accountName
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public findByAccountNameExpenseUsingGET(param0?: string, observe?: 'body', reportProgress?: boolean): Observable<ResourcesExpense>;
-    public findByAccountNameExpenseUsingGET(param0?: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<ResourcesExpense>>;
-    public findByAccountNameExpenseUsingGET(param0?: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<ResourcesExpense>>;
-    public findByAccountNameExpenseUsingGET(param0?: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public findByAccountNameExpenseUsingGET(accountName?: string, observe?: 'body', reportProgress?: boolean): Observable<ResourcesExpense>;
+    public findByAccountNameExpenseUsingGET(accountName?: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<ResourcesExpense>>;
+    public findByAccountNameExpenseUsingGET(accountName?: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<ResourcesExpense>>;
+    public findByAccountNameExpenseUsingGET(accountName?: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
 
         let queryParameters = new HttpParams({encoder: new CustomHttpUrlEncodingCodec()});
-        if (param0 !== undefined) {
-            queryParameters = queryParameters.set('param0', <any>param0);
+        if (accountName !== undefined) {
+            queryParameters = queryParameters.set('accountName', <any>accountName);
         }
 
         let headers = this.defaultHeaders;
@@ -561,21 +561,21 @@ export class ExpenseEntityService {
      * findOneByAccountAndTitleExpense
      * 
      * @param name 
-     * @param param1 param1
+     * @param title title
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public findOneByAccountAndTitleExpenseUsingGET(name?: string, param1?: string, observe?: 'body', reportProgress?: boolean): Observable<ResourceExpense>;
-    public findOneByAccountAndTitleExpenseUsingGET(name?: string, param1?: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<ResourceExpense>>;
-    public findOneByAccountAndTitleExpenseUsingGET(name?: string, param1?: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<ResourceExpense>>;
-    public findOneByAccountAndTitleExpenseUsingGET(name?: string, param1?: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public findOneByAccountAndTitleExpenseUsingGET(name?: string, title?: string, observe?: 'body', reportProgress?: boolean): Observable<ResourceExpense>;
+    public findOneByAccountAndTitleExpenseUsingGET(name?: string, title?: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<ResourceExpense>>;
+    public findOneByAccountAndTitleExpenseUsingGET(name?: string, title?: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<ResourceExpense>>;
+    public findOneByAccountAndTitleExpenseUsingGET(name?: string, title?: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
 
         let queryParameters = new HttpParams({encoder: new CustomHttpUrlEncodingCodec()});
         if (name !== undefined) {
             queryParameters = queryParameters.set('name', <any>name);
         }
-        if (param1 !== undefined) {
-            queryParameters = queryParameters.set('param1', <any>param1);
+        if (title !== undefined) {
+            queryParameters = queryParameters.set('title', <any>title);
         }
 
         let headers = this.defaultHeaders;

@@ -7,7 +7,10 @@
     {{account.name}}
   </h1>
 
-  <h2>Payments</h2>
+  <h2>Incomes</h2>
+
+  <app-income-list [resourcesIncome]="resourcesIncome"></app-income-list>
+
   <form (ngSubmit)="onPaymentSubmit()" #paymentForm="ngForm">
     <div class="form-row">
       <div class="col-8">

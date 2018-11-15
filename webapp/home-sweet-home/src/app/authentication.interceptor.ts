@@ -6,7 +6,7 @@ import {Configuration, ConfigurationParameters} from '../generated';
 export function apiConfigFactory() {
   const params: ConfigurationParameters = {
     username: 'user',
-    password: 'ea522c12-90a8-4721-805e-b008c5184f0c',
+    password: '90f1a1b9-c98a-49c1-a77c-7cc5a19756ac',
     basePath: 'http://localhost:8080'
   }
   return new Configuration(params);

@@ -3,12 +3,11 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {
   Income,
   IncomeEntityService,
-  ResourceAccount,
+  ResourceAccount, ResourcesIncome,
   ResourcesTransaction,
   Transaction,
   TransactionEntityService
 } from '../../../generated';
-import {Observable} from 'rxjs';
 import 'rxjs-compat/add/observable/of';
 import 'rxjs-compat/add/operator/delay';
 
@@ -19,6 +18,7 @@ import 'rxjs-compat/add/operator/delay';
 })
 export class AccountDetailsComponent implements OnInit {
   protected account: ResourceAccount;
+  protected resourcesIncome: ResourcesIncome;
   protected transactions: Array<Transaction>;
   payment: Income = {
     amount: 0,
@@ -29,14 +29,15 @@ export class AccountDetailsComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private transactionEntityService: TransactionEntityService,
-    private incomeEntityServie: IncomeEntityService) { }
+    private incomeEntityService: IncomeEntityService) { }
 
   ngOnInit() {
     this.route.data.subscribe(data => {
       const accountUrl: string = data.resourceAccount['_links'].self.href;
       this.account = data.resourceAccount;
+      this.resourcesIncome = data.resourcesIncome;
       // @ts-ignore
-      // special handling: Data-Rest uses the resoure URL as identifier
+      // special handling: Data-Rest uses the resource URL as identifier
       // but not the full model as generated from swagger file
       this.payment.account = accountUrl;
 
@@ -51,7 +52,7 @@ export class AccountDetailsComponent implements OnInit {
   }
 
   onPaymentSubmit() {
-    this.incomeEntityServie
+    this.incomeEntityService
       .saveIncomeUsingPOST(this.payment)
       .subscribe(response => {
         this.router.navigate([this.router.url]);

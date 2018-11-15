@@ -6,6 +6,7 @@ import { AccountDetailsComponent } from './account-details/account-details.compo
 import {AccountResolverService} from './account-resolver.service';
 import {RouterModule} from '@angular/router';
 import {FormsModule} from '@angular/forms';
+import { IncomeListComponent } from './income-list/income-list.component';
 
 @NgModule({
   imports: [
@@ -15,9 +16,10 @@ import {FormsModule} from '@angular/forms';
   ],
   exports: [
     AccountListComponent,
-    AccountDetailsComponent
+    AccountDetailsComponent,
+    IncomeListComponent
   ],
-  declarations: [AccountListComponent, AccountDetailsComponent],
+  declarations: [AccountListComponent, AccountDetailsComponent, IncomeListComponent],
   providers: [
     AccountsResolverService,
     AccountResolverService

@@ -4,6 +4,7 @@ import {AccountListComponent} from './accounting/account-list/account-list.compo
 import {AccountsResolverService} from './accounting/accounts-resolver.service';
 import {AccountDetailsComponent} from './accounting/account-details/account-details.component';
 import {AccountResolverService} from './accounting/account-resolver.service';
+import {IncomeResolverService} from './accounting/income-resolver.service';
 
 const routes: Routes = [
   {
@@ -17,7 +18,8 @@ const routes: Routes = [
     path: 'accounts/:id',
     component: AccountDetailsComponent,
     resolve: {
-      resourceAccount: AccountResolverService
+      resourceAccount: AccountResolverService,
+      resourcesIncome: IncomeResolverService
     },
     runGuardsAndResolvers: 'always'
   },

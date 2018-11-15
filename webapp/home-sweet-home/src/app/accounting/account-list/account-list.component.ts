@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {
-  ResourcesAccount
+  ResourcesAccount,
+  Account
 } from '../../../generated';
 import {ActivatedRoute} from '@angular/router';
 

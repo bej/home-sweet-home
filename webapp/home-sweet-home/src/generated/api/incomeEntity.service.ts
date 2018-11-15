@@ -100,6 +100,49 @@ export class IncomeEntityService {
     }
 
     /**
+     * findAllByAccountIncome
+     * 
+     * @param account account
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public findAllByAccountIncomeUsingGET(account?: string, observe?: 'body', reportProgress?: boolean): Observable<ResourcesIncome>;
+    public findAllByAccountIncomeUsingGET(account?: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<ResourcesIncome>>;
+    public findAllByAccountIncomeUsingGET(account?: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<ResourcesIncome>>;
+    public findAllByAccountIncomeUsingGET(account?: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+
+        let queryParameters = new HttpParams({encoder: new CustomHttpUrlEncodingCodec()});
+        if (account !== undefined) {
+            queryParameters = queryParameters.set('account', <any>account);
+        }
+
+        let headers = this.defaultHeaders;
+
+        // to determine the Accept header
+        let httpHeaderAccepts: string[] = [
+            '*/*'
+        ];
+        let httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected != undefined) {
+            headers = headers.set("Accept", httpHeaderAcceptSelected);
+        }
+
+        // to determine the Content-Type header
+        let consumes: string[] = [
+        ];
+
+        return this.httpClient.get<ResourcesIncome>(`${this.basePath}/incomes/search/findAllByAccount`,
+            {
+                params: queryParameters,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
      * findAllIncome
      * 
      * @param page page

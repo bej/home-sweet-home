@@ -15,6 +15,7 @@ import { Account } from './account';
 export interface Expense {
     account?: Account;
     amount?: number;
+    balance?: number;
     complete?: boolean;
     title?: string;
 }

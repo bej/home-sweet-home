@@ -11,6 +11,8 @@ import java.util.List;
 public interface IncomeRepository extends PagingAndSortingRepository<Income, Integer> {
     List<Income> findByAccountName(String accountName);
 
+    List<Income> findAllByAccount(@Param("account") Account account);
+
     @Query("SELECT i FROM Income i WHERE " +
             "i.account = :account " +
             "AND " +
